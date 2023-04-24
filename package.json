@@ -1,0 +1,17 @@
+{
+  "name": "bank-app",
+  "version": "1.0.0",
+  "description": "bank app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite": "^4.3.1"
+  }
+}
