@@ -1,15 +1,32 @@
-import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
+import React, { useState } from "react";
 
 function Signup({ onToggle }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [accountID, setAccountID] = useState("");
+  const [accountBudget, setAccountBudget] = useState(0);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const users = JSON.parse(localStorage.getItem("users")) || [];
-    const newUser = { email, password };
+    let newAccountID;
+    const existingIDs = users.map((user) => user.accountID);
+
+    do {
+      newAccountID = generateAccountID();
+    } while (existingIDs.includes(newAccountID));
+
+    const newAccountBudget =
+      Math.floor(Math.random() * (50000 - 10000 + 1)) + 10000;
+    const newUser = {
+      email,
+      password,
+      accountID: newAccountID,
+      accountBudget: newAccountBudget,
+      isLoggedIn: false, // add isLoggedIn property with initial value of false
+    };
     const existingUser = users.find((user) => user.email === email);
 
     if (existingUser) {
@@ -20,8 +37,22 @@ function Signup({ onToggle }) {
       users.push(newUser);
       localStorage.setItem("users", JSON.stringify(users));
       alert("User registered successfully!");
+      setAccountID(newAccountID);
+      setAccountBudget(newAccountBudget);
       onToggle(); // switch to Login component
     }
+  };
+
+  const generateAccountID = () => {
+    let accountId = "";
+    const characters = "0123456789";
+    const charactersLength = characters.length;
+    for (let i = 0; i < 16; i++) {
+      accountId += characters.charAt(
+        Math.floor(Math.random() * charactersLength)
+      );
+    }
+    return accountId;
   };
 
   return (

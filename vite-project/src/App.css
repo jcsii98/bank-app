@@ -1,3 +1,11 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+.gradient-background {
+  background: linear-gradient(to bottom, #3e5c76, #1d2d44);
+}
 #navbar-padding {
   padding: 0;
   padding-top: 0;
@@ -18,17 +26,6 @@
   justify-content: center;
   align-items: center;
 }
-.virtual-card-container {
-  height: 180px;
-  width: 300px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  margin: 5px;
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-}
 
 .sm-card-container {
   height: 180px;
@@ -37,6 +34,7 @@
   grid-template-columns: 1fr 1fr;
 }
 .sm-card {
+  background-color: #748cab;
   height: auto;
   width: 150px;
   border-radius: 10px;
@@ -52,18 +50,46 @@
   margin-bottom: 10px;
 }
 
-.expenses {
-  height: 150px;
+.dash-header {
+  color: white;
   width: 620px;
-  margin-top: 10px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
+#root {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.container {
+  width: 500px;
+}
+
+/* virtual card */
+.virtual-card-container {
+  background-color: #f0ebd8;
+  font-family: "Roboto Mono", monospace;
+  color: #343a40;
+  height: 180px;
+  width: 300px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  margin: 5px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
 .vc-header {
   height: 80px;
   display: flex;
   align-items: center;
+  font-size: 28px;
 }
 
 .vc-footer {
@@ -82,23 +108,39 @@
   align-self: end;
 }
 
-.dash-header {
-  margin-top: 3rem;
-  width: 620px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.vc-footer-img {
+  width: 40px;
+  height: 40px;
 }
 
-#root {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
+/* expenses */
+
+.expenses {
+  background-color: #748cab;
+  height: 150px;
+  width: 620px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .expense-list-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
+  align-items: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  display: flex;
+  justify-content: center;
   align-items: center;
 }

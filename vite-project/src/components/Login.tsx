@@ -12,15 +12,22 @@ function Login({ onToggle, onLogin }) {
     setPassword(event.target.value);
   };
 
+  const handleLogin = (accountID, accountBudget) => {
+    onLogin(accountID, accountBudget);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const users = JSON.parse(localStorage.getItem("users")) || [];
-    const user = users.find(
+    const userIndex = users.findIndex(
       (u) => u.email === email && u.password === password
     );
-    if (user) {
-      console.log(`Login successful. Welcome, ${user.name}!`);
-      onLogin(); // call the onLogin prop
+    if (userIndex > -1) {
+      console.log(`Login successful. Welcome, ${users[userIndex].email}!`);
+      const loggedInUser = users[userIndex];
+      loggedInUser.isLoggedIn = true; // update isLoggedIn property
+      localStorage.setItem("users", JSON.stringify(users)); // update localStorage
+      handleLogin(loggedInUser.accountID, loggedInUser.accountBudget);
     } else {
       console.log("Invalid email or password.");
     }
