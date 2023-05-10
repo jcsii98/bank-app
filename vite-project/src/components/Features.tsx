@@ -7,7 +7,7 @@ function Features(props) {
 
   const handleModalOpen = () => {
     setShowModal(true);
-    setInputValue("0");
+    setInputValue("");
     console.log("modal shown");
   };
   const handleModalClose = () => {
@@ -34,22 +34,20 @@ function Features(props) {
         <div className="modal-main">
           <div className="modal-main-content">
             <div className="modal-main-content-header">
-              <p>{label}</p>
+              <p className="modal-label">{label.toUpperCase()}</p>
               <span className="close-main" onClick={handleModalClose}>
                 &times;
               </span>
             </div>
-            <div className="modal-main-content-footer">
+            <form className="modal-main-content-footer" onSubmit={handleSubmit}>
               <input
+                placeholder="0"
                 className="input-modal"
                 type="number"
                 value={inputValue}
                 onChange={handleInputChange}
               />
-              <button className="input-modal-button" onClick={handleSubmit}>
-                Submit
-              </button>
-            </div>
+            </form>
           </div>
         </div>
       )}
