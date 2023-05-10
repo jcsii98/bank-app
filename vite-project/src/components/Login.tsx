@@ -39,6 +39,8 @@ function Login(props) {
           cardNumber={existingUser.cardNumber}
           balance={existingUser.balance}
           expiryDate={existingUser.expiryDate}
+          expenses={existingUser.expenses}
+          name={existingUser.name}
         />
       ) : (
         <div className="container">
@@ -48,7 +50,7 @@ function Login(props) {
                 <div className="card-body p-5">
                   <h1 className="mb-4">Login</h1>
                   <form onSubmit={submitForm}>
-                    <div className="mb-3">
+                    <div className="mb-3 main-form">
                       <Input
                         type="text"
                         name="username"
@@ -57,7 +59,7 @@ function Login(props) {
                         onChange={(event) => setUsername(event.target.value)}
                       />
                     </div>
-                    <div className="mb-3">
+                    <div className="mb-3 main-form">
                       <Input
                         type="password"
                         name="password"
@@ -72,7 +74,11 @@ function Login(props) {
                     </button>
                     <div className="mt-3">
                       Don't have an account?{" "}
-                      <button type="button" onClick={toggleCredentials}>
+                      <button
+                        className="btn btn-link p-0"
+                        type="button"
+                        onClick={toggleCredentials}
+                      >
                         Sign up here
                       </button>
                       .

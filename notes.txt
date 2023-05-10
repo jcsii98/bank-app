@@ -1,4 +1,8 @@
 to fix... 
 
-deposit handlesubmit not rerendering updated values in virtual card.
 
+styles...
+modals
+expense list looks ugly
+add icons to features
+logout button looks fugly

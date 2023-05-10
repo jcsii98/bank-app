@@ -4,6 +4,7 @@ function Input(props) {
     <>
       <label htmlFor={name}>{label}</label>
       <input
+        className="main-form-input"
         type={type}
         name={name}
         id={name}

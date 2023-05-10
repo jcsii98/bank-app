@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function Features(props) {
-  const { label, handleFeature } = props;
+  const { label, handleFeature, className } = props;
   const [inputValue, setInputValue] = useState("");
   const [showModal, setShowModal] = useState(false);
 
@@ -22,11 +22,12 @@ function Features(props) {
     if (!isNaN(inputAmount)) {
       handleFeature(inputAmount);
       console.log("Amount entered:", inputAmount);
+      handleModalClose();
     }
   };
   return (
     <>
-      <button className="sm-card row1" onClick={handleModalOpen}>
+      <button className={className} onClick={handleModalOpen}>
         {label}
       </button>
       {showModal && (
@@ -40,11 +41,14 @@ function Features(props) {
             </div>
             <div className="modal-main-content-footer">
               <input
+                className="input-modal"
                 type="number"
                 value={inputValue}
                 onChange={handleInputChange}
               />
-              <button onClick={handleSubmit}>Submit</button>
+              <button className="input-modal-button" onClick={handleSubmit}>
+                Submit
+              </button>
             </div>
           </div>
         </div>

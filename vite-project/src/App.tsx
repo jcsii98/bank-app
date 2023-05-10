@@ -1,7 +1,4 @@
-import React, { useState, useEffect } from "react";
-import Login from "./components/Login.tsx";
 import Dashboard from "./components/Dashboard.tsx";
-import Signup from "./components/Signup.tsx";
 import Credentials from "./components/Credentials.tsx";
 
 function App() {
@@ -19,6 +16,8 @@ function App() {
           cardNumber={loggedInUser.cardNumber}
           balance={loggedInUser.balance}
           expiryDate={loggedInUser.expiryDate}
+          expenses={loggedInUser.expenses}
+          name={loggedInUser.name}
         />
       ) : (
         <Credentials />

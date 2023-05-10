@@ -5,6 +5,7 @@ function Signup(props) {
   const { toggleCredentials } = props;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState("");
 
   // cash incentive
@@ -42,23 +43,26 @@ function Signup(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!username || !password) {
+    if (!username || !password || !name) {
       setError("Please enter a username and password");
       return;
     }
     const user = {
       username,
+      name,
       password,
       cardNumber: cardNumber,
       expiryDate: expiryDate,
       balance: randomNumber,
       status: false,
+      expenses: [], // add an expenses array to the user object
     };
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const existingUser = users.find((u) => u.username === username);
     if (existingUser) {
       setError("Username already exists");
     } else {
+      toggleCredentials();
       localStorage.setItem("users", JSON.stringify([...users, user]));
       console.log(user);
       console.log(users);
@@ -66,42 +70,59 @@ function Signup(props) {
   };
 
   return (
-    <div className="container mt-5">
-      <h1 className="text-center">Signup</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <Input
-            type="text"
-            name="username"
-            label="Username"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-          />
+    <div className="container">
+      <div className="row justify-content-center">
+        <div className="col-lg-6">
+          <div className="card my-5">
+            <div className="card-body p-5">
+              <h1 className="mb-4">Signup</h1>
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3 main-form">
+                  <Input
+                    type="text"
+                    name="name"
+                    label="Name"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                  />
+                </div>
+                <div className="mb-3 main-form">
+                  <Input
+                    type="text"
+                    name="username"
+                    label="Username"
+                    value={username}
+                    onChange={(event) => setUsername(event.target.value)}
+                  />
+                </div>
+                <div className="mb-3 main-form">
+                  <Input
+                    type="password"
+                    name="password"
+                    label="Password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                  />
+                </div>
+                {error && <div className="text-danger mb-3">{error}</div>}
+                <button className="btn btn-primary" type="submit">
+                  Signup
+                </button>
+                <div className="mt-3">
+                  Already have an account?{" "}
+                  <button
+                    type="button"
+                    className="btn btn-link p-0"
+                    onClick={toggleCredentials}
+                  >
+                    Login here
+                  </button>
+                  .
+                </div>
+              </form>{" "}
+            </div>
+          </div>
         </div>
-        <div className="mb-3">
-          <Input
-            type="password"
-            name="password"
-            label="Password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </div>
-        {error && <div className="text-danger mb-3">{error}</div>}
-        <button className="btn btn-primary" type="submit">
-          Signup
-        </button>
-      </form>{" "}
-      <div className="mt-3">
-        Already have an account?{" "}
-        <button
-          type="button"
-          className="btn btn-link p-0"
-          onClick={toggleCredentials}
-        >
-          Login here
-        </button>
-        .
       </div>
     </div>
   );
