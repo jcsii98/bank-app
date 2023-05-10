@@ -1,52 +1,41 @@
-import Greeting from "./Greeting";
 import BigContainer from "./BigContainer";
+import React, { useState } from "react";
+import Credentials from "./Credentials";
 
-function Dashboard({
-  onLogout,
-  accountID,
-  accountBudget,
-  setUser,
-  setIsLoggedIn,
-}) {
+function Dashboard(props) {
+  const { username, cardNumber, balance, expiryDate } = props;
+  const [isLoggedOut, setIsLoggedOut] = useState(false);
   const handleClick = () => {
     console.log("logout button clicked");
-    handleLogout(accountID, accountBudget);
-    onLogout();
-  };
-  const handleLogout = (accountID: string, accountBudget: number) => {
-    // update "user" key
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user && user.accountID === accountID) {
-      localStorage.removeItem("user");
-      console.log("user has been logged out");
-    }
-
-    // update "users" key
+    setIsLoggedOut(true);
     const users = JSON.parse(localStorage.getItem("users")) || [];
-    const updatedUsers = users.map((u) =>
-      u.accountID === accountID ? { ...u, isLoggedIn: false, accountBudget } : u
-    );
+    const updatedUsers = users.map((user) => {
+      return { ...user, status: false };
+    });
     localStorage.setItem("users", JSON.stringify(updatedUsers));
-
-    window.location.reload();
   };
 
   return (
     <>
-      <div className="dash-header">
-        <div className="greet">
-          <Greeting />
-          <p>Pick a transaction for today.</p>
-        </div>
-        <button className="btn btn-secondary" onClick={handleClick}>
-          Logout
-        </button>
-      </div>
-      <BigContainer
-        accountID={accountID}
-        accountBudget={accountBudget}
-        onLogout={onLogout}
-      />
+      {isLoggedOut ? (
+        <Credentials />
+      ) : (
+        <>
+          <div className="dash-header">
+            <div className="greet">
+              <p>Hi, {username}</p>
+            </div>
+            <button className="btn btn-secondary" onClick={handleClick}>
+              Logout
+            </button>
+          </div>
+          <BigContainer
+            cardNumber={cardNumber}
+            balance={balance}
+            expiryDate={expiryDate}
+          />
+        </>
+      )}
     </>
   );
 }

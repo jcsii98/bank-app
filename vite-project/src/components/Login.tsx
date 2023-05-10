@@ -1,93 +1,89 @@
 import { useState } from "react";
+import Input from "./Input";
+import Dashboard from "./Dashboard";
 
-function Login({ onToggle, onLogin }) {
-  const [email, setEmail] = useState("");
+function Login(props) {
+  const { toggleCredentials } = props;
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleLogin = (accountID, accountBudget) => {
-    onLogin(accountID, accountBudget);
-  };
-
-  const handleSubmit = (event) => {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const existingUser = users.find((u) => u.username === username);
+  const submitForm = (event) => {
     event.preventDefault();
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const userIndex = users.findIndex(
-      (u) => u.email === email && u.password === password
-    );
-    if (userIndex > -1) {
-      console.log(`Login successful. Welcome, ${users[userIndex].email}!`);
-      const loggedInUser = users[userIndex];
-      loggedInUser.isLoggedIn = true; // update isLoggedIn property
-      localStorage.setItem("users", JSON.stringify(users)); // update localStorage
-      handleLogin(loggedInUser.accountID, loggedInUser.accountBudget);
-    } else {
-      console.log("Invalid email or password.");
+
+    if (!existingUser) {
+      setError("Username does not exist");
+      return;
     }
+
+    if (existingUser.password !== password) {
+      setError("Incorrect password");
+      return;
+    }
+
+    existingUser.status = true;
+
+    localStorage.setItem("users", JSON.stringify(users));
+
+    setIsLoggedIn(true);
   };
 
   return (
     <>
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-lg-6">
-            <div className="card my-5">
-              <div className="card-body p-5">
-                <h1 className="mb-4">Login</h1>
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label htmlFor="email" className="form-label">
-                      Email address
-                    </label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      placeholder="Enter email"
-                      value={email}
-                      onChange={handleEmailChange}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="password" className="form-label">
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="password"
-                      placeholder="Enter password"
-                      value={password}
-                      onChange={handlePasswordChange}
-                    />
-                  </div>
-                  <button type="submit" className="btn btn-primary">
-                    Login
-                  </button>
-                  <div className="mt-3">
-                    Don't have an account?{" "}
-                    <button
-                      type="button"
-                      className="btn btn-link p-0"
-                      onClick={onToggle}
-                    >
-                      Sign up here
+      {isLoggedIn ? (
+        <Dashboard
+          username={existingUser.username}
+          cardNumber={existingUser.cardNumber}
+          balance={existingUser.balance}
+          expiryDate={existingUser.expiryDate}
+        />
+      ) : (
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-lg-6">
+              <div className="card my-5">
+                <div className="card-body p-5">
+                  <h1 className="mb-4">Login</h1>
+                  <form onSubmit={submitForm}>
+                    <div className="mb-3">
+                      <Input
+                        type="text"
+                        name="username"
+                        label="Username"
+                        value={username}
+                        onChange={(event) => setUsername(event.target.value)}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <Input
+                        type="password"
+                        name="password"
+                        label="Password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                      />
+                    </div>
+                    {error && <div className="text-danger mb-3">{error}</div>}
+                    <button type="submit" className="btn btn-primary">
+                      Login
                     </button>
-                    .
-                  </div>
-                </form>
+                    <div className="mt-3">
+                      Don't have an account?{" "}
+                      <button type="button" onClick={toggleCredentials}>
+                        Sign up here
+                      </button>
+                      .
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

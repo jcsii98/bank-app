@@ -1,105 +1,108 @@
-import { Form, Button } from "react-bootstrap";
-import React, { useState } from "react";
+import { useState } from "react";
+import Input from "./Input";
 
-function Signup({ onToggle }) {
-  const [email, setEmail] = useState("");
+function Signup(props) {
+  const { toggleCredentials } = props;
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [accountID, setAccountID] = useState("");
-  const [accountBudget, setAccountBudget] = useState(0);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    let newAccountID;
-    const existingIDs = users.map((user) => user.accountID);
+  // cash incentive
+  const generateRandomNumber = () => {
+    const min = 10000;
+    const max = 20000;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+  const randomNumber = generateRandomNumber();
 
-    do {
-      newAccountID = generateAccountID();
-    } while (existingIDs.includes(newAccountID));
-
-    const newAccountBudget =
-      Math.floor(Math.random() * (50000 - 10000 + 1)) + 10000;
-    const newUser = {
-      email,
-      password,
-      accountID: newAccountID,
-      accountBudget: newAccountBudget,
-      isLoggedIn: false, // add isLoggedIn property with initial value of false
-    };
-    const existingUser = users.find((user) => user.email === email);
-
-    if (existingUser) {
-      alert("User already exists!");
-    } else if (password !== confirmPassword) {
-      alert("Passwords don't match!");
-    } else {
-      users.push(newUser);
-      localStorage.setItem("users", JSON.stringify(users));
-      alert("User registered successfully!");
-      setAccountID(newAccountID);
-      setAccountBudget(newAccountBudget);
-      onToggle(); // switch to Login component
-    }
+  // Card number
+  const generateCardNumber = () => {
+    const prefix = "5775";
+    const length = 12;
+    let randomNum = Math.floor(Math.random() * Math.pow(10, length));
+    randomNum = prefix + String(randomNum).padStart(length, "0");
+    const formattedNum = randomNum.match(/.{1,4}/g).join(" ");
+    return formattedNum;
   };
 
-  const generateAccountID = () => {
-    let accountId = "";
-    const characters = "0123456789";
-    const charactersLength = characters.length;
-    for (let i = 0; i < 16; i++) {
-      accountId += characters.charAt(
-        Math.floor(Math.random() * charactersLength)
-      );
+  const cardNumber = generateCardNumber();
+
+  // expiry date
+
+  const generateExpiryDate = () => {
+    const currentDate = new Date();
+    const expiryDate = new Date(
+      currentDate.setFullYear(currentDate.getFullYear() + 3)
+    );
+    const expiryMonth = String(expiryDate.getMonth() + 1).padStart(2, "0");
+    const expiryYear = String(expiryDate.getFullYear()).slice(2);
+    return `${expiryMonth}/${expiryYear}`;
+  };
+  const expiryDate = generateExpiryDate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!username || !password) {
+      setError("Please enter a username and password");
+      return;
     }
-    return accountId;
+    const user = {
+      username,
+      password,
+      cardNumber: cardNumber,
+      expiryDate: expiryDate,
+      balance: randomNumber,
+      status: false,
+    };
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const existingUser = users.find((u) => u.username === username);
+    if (existingUser) {
+      setError("Username already exists");
+    } else {
+      localStorage.setItem("users", JSON.stringify([...users, user]));
+      console.log(user);
+      console.log(users);
+    }
   };
 
   return (
     <div className="container mt-5">
       <h1 className="text-center">Signup</h1>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <Input
+            type="text"
+            name="username"
+            label="Username"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
           />
-        </Form.Group>
-
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
+        </div>
+        <div className="mb-3">
+          <Input
             type="password"
-            placeholder="Password"
+            name="password"
+            label="Password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
-        </Form.Group>
-
-        <Form.Group controlId="formBasicConfirmPassword">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-          />
-        </Form.Group>
-
-        <Button variant="primary" type="submit">
-          Signup
-        </Button>
-        <div className="mt-3">
-          Already have an account?{" "}
-          <button type="button" className="btn btn-link p-0" onClick={onToggle}>
-            Login here
-          </button>
-          .
         </div>
-      </Form>
+        {error && <div className="text-danger mb-3">{error}</div>}
+        <button className="btn btn-primary" type="submit">
+          Signup
+        </button>
+      </form>{" "}
+      <div className="mt-3">
+        Already have an account?{" "}
+        <button
+          type="button"
+          className="btn btn-link p-0"
+          onClick={toggleCredentials}
+        >
+          Login here
+        </button>
+        .
+      </div>
     </div>
   );
 }

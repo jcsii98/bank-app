@@ -1,46 +1,61 @@
+import { useState } from "react";
 import VirtualCard from "./VirtualCard";
-import React, { useState, useEffect } from "react";
 import Expenses from "./Expenses";
-import Deposit from "./Deposit";
+import Features from "./Features";
 
-type User = {
-  email: string;
-  password: string;
-  accountID: string;
-  accountBudget: number;
-  isLoggedIn: boolean;
-};
+function BigContainer(props) {
+  const { cardNumber, balance, expiryDate } = props;
+  const [currentBalance, setBalance] = useState(balance);
 
-function BigContainer() {
-  const [user, setUser] = useState<User>({});
-
-  useEffect(() => {
-    console.log(JSON.parse(localStorage.getItem("users")));
+  const handleDepositSubmit = (depositAmount) => {
+    const newBalance = balance + depositAmount;
+    setBalance(newBalance);
     const users = JSON.parse(localStorage.getItem("users")) || [];
-    const loggedInUser = users.find((user) => user.isLoggedIn === true);
-    setUser(loggedInUser);
-  }, []);
+    const updatedUsers = users.map((user) => {
+      if (user.status) {
+        return { ...user, balance: newBalance };
+      } else {
+        return user;
+      }
+    });
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+  };
+  const handleWithdrawSubmit = (withdrawAmount) => {
+    if (withdrawAmount > balance) {
+      console.log("Withdrawal amount cannot be greater than balance");
+      return;
+    }
+
+    const newBalance = balance - withdrawAmount;
+    setBalance(newBalance);
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const updatedUsers = users.map((user) => {
+      if (user.status) {
+        return { ...user, balance: newBalance };
+      } else {
+        return user;
+      }
+    });
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+  };
 
   return (
     <>
-      {user ? (
-        <div className="big-container">
-          <VirtualCard
-            accountBudget={user.accountBudget}
-            accountID={user.accountID}
-          />
+      <div className="big-container">
+        <VirtualCard
+          cardNumber={cardNumber}
+          balance={currentBalance}
+          expiryDate={expiryDate}
+        />
 
-          <div className="sm-card-container">
-            <Deposit
-              accountID={user.accountID}
-              accountBudget={user.accountBudget}
-            />
-            <div className="sm-card row1">Send Money</div>
-            <div className="sm-card">Withdraw</div>
-            <div className="sm-card">Friends</div>
-          </div>
+        <div className="sm-card-container">
+          <Features label="Deposit" handleFeature={handleDepositSubmit} />
+          <Features label="Send Money" handleFeature={handleWithdrawSubmit} />
+          <Features label="Withdraw" handleFeature={handleWithdrawSubmit} />
+          <Features label="Friends" />
         </div>
-      ) : null}
+      </div>
       <div className="big-container">
         <Expenses />
       </div>
