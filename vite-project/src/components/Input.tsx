@@ -1,4 +1,12 @@
-function Input(props) {
+interface InputProps {
+  type: any;
+  name: any;
+  label: any;
+  value: any;
+  onChange: any;
+}
+
+function Input(props: InputProps) {
   const { type, name, label, value, onChange } = props;
   return (
     <>

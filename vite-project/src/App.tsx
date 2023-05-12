@@ -2,8 +2,18 @@ import Dashboard from "./components/Dashboard.tsx";
 import Credentials from "./components/Credentials.tsx";
 
 function App() {
+  interface User {
+    username: string;
+    cardNumber: string;
+    balance: number;
+    expiryDate: string;
+    expenses: number[];
+    name: string;
+    status: boolean;
+  }
   const getLoggedInUser = () => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const usersJSON = localStorage.getItem("users");
+    const users: User[] = usersJSON ? JSON.parse(usersJSON) : [];
     return users.find((u) => u.status === true);
   };
   const loggedInUser = getLoggedInUser();
@@ -12,7 +22,6 @@ function App() {
     <>
       {loggedInUser ? (
         <Dashboard
-          username={loggedInUser.username}
           cardNumber={loggedInUser.cardNumber}
           balance={loggedInUser.balance}
           expiryDate={loggedInUser.expiryDate}

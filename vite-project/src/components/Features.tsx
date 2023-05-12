@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-function Features(props) {
+interface FeaturesProps {
+  label: string;
+  handleFeature: (feature: string) => void;
+  className?: string;
+}
+function Features(props: FeaturesProps) {
   const { label, handleFeature, className } = props;
   const [inputValue, setInputValue] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -14,13 +19,13 @@ function Features(props) {
     setShowModal(false);
     console.log("modal hidden");
   };
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
   const handleSubmit = () => {
     const inputAmount = parseFloat(inputValue);
     if (!isNaN(inputAmount)) {
-      handleFeature(inputAmount);
+      handleFeature(inputAmount.toString());
       console.log("Amount entered:", inputAmount);
       handleModalClose();
     }

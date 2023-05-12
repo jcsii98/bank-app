@@ -2,16 +2,19 @@ import { useState } from "react";
 import Input from "./Input";
 import Dashboard from "./Dashboard";
 
-function Login(props) {
+interface LoginProps {
+  toggleCredentials: any;
+}
+function Login(props: LoginProps) {
   const { toggleCredentials } = props;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  const existingUser = users.find((u) => u.username === username);
-  const submitForm = (event) => {
+  const users = JSON.parse(localStorage.getItem("users")!) || [];
+  const existingUser = users.find((u: any) => u.username === username);
+  const submitForm = (event: any) => {
     event.preventDefault();
 
     if (!existingUser) {
@@ -35,7 +38,6 @@ function Login(props) {
     <>
       {isLoggedIn ? (
         <Dashboard
-          username={existingUser.username}
           cardNumber={existingUser.cardNumber}
           balance={existingUser.balance}
           expiryDate={existingUser.expiryDate}
@@ -56,7 +58,9 @@ function Login(props) {
                         name="username"
                         label="Username"
                         value={username}
-                        onChange={(event) => setUsername(event.target.value)}
+                        onChange={(event: any) =>
+                          setUsername(event.target.value)
+                        }
                       />
                     </div>
                     <div className="mb-3 main-form">
@@ -65,7 +69,9 @@ function Login(props) {
                         name="password"
                         label="Password"
                         value={password}
-                        onChange={(event) => setPassword(event.target.value)}
+                        onChange={(event: any) =>
+                          setPassword(event.target.value)
+                        }
                       />
                     </div>
                     {error && <div className="text-danger mb-3">{error}</div>}

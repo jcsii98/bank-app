@@ -3,22 +3,24 @@ import VirtualCard from "./VirtualCard";
 import Expenses from "./Expenses";
 import Features from "./Features";
 
-function BigContainer(props) {
+interface BigContainerProps {
+  cardNumber: string;
+  balance: number;
+  expiryDate: string;
+  expenses: number[];
+}
+
+function BigContainer(props: BigContainerProps) {
   const { cardNumber, balance, expiryDate, expenses } = props;
   const [currentBalance, setBalance] = useState(balance);
   const [currentExpenses, setCurrentExpenses] = useState(expenses);
-  const getLoggedInUser = () => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    return users.find((u) => u.status === true);
-  };
 
-  const loggedInUser = getLoggedInUser();
-
-  const handleDepositSubmit = (depositAmount) => {
+  const handleDepositSubmit = (depositAmount: number) => {
     const newBalance = currentBalance + depositAmount;
     setBalance(newBalance);
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const updatedUsers = users.map((user) => {
+    const usersJSON = localStorage.getItem("users");
+    const users = usersJSON ? JSON.parse(usersJSON) : [];
+    const updatedUsers = users.map((user: any) => {
       if (user.status) {
         return { ...user, balance: newBalance };
       } else {
@@ -26,19 +28,21 @@ function BigContainer(props) {
       }
     });
     localStorage.setItem("users", JSON.stringify(updatedUsers));
-    console.log(loggedInUser);
   };
-  const handleWithdrawSubmit = (withdrawAmount) => {
+  const handleDepositSubmitString = (depositAmount: string) => {
+    const amount = parseInt(depositAmount, 10);
+    handleDepositSubmit(amount);
+  };
+  const handleWithdrawSubmit = (withdrawAmount: number) => {
     if (withdrawAmount > currentBalance) {
       console.log("Amount cannot be greater than balance");
       return;
     }
-
     const newBalance = currentBalance - withdrawAmount;
     setBalance(newBalance);
-
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const updatedUsers = users.map((user) => {
+    const usersJSON = localStorage.getItem("users");
+    const users = usersJSON ? JSON.parse(usersJSON) : [];
+    const updatedUsers = users.map((user: any) => {
       if (user.status) {
         return { ...user, balance: newBalance };
       } else {
@@ -46,18 +50,20 @@ function BigContainer(props) {
       }
     });
     localStorage.setItem("users", JSON.stringify(updatedUsers));
-    console.log(loggedInUser);
   };
-
-  const handleExpenseSubmit = (expenseName, expenseCost) => {
+  const handleWithdrawSubmitString = (withdrawAmount: string) => {
+    const amount = parseInt(withdrawAmount, 10);
+    handleWithdrawSubmit(amount);
+  };
+  const handleExpenseSubmit = (expenseName: any, expenseCost: any) => {
     console.log("expense submitted");
     const expense = {
       name: expenseName,
       cost: expenseCost,
     };
-
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const updatedUsers = users.map((user) => {
+    const usersJSON = localStorage.getItem("users");
+    const users = usersJSON ? JSON.parse(usersJSON) : [];
+    const updatedUsers = users.map((user: any) => {
       if (user.status) {
         return { ...user, expenses: [...user.expenses, expense] }; // add the expense to the user's expenses array
       } else {
@@ -65,11 +71,11 @@ function BigContainer(props) {
       }
     });
     localStorage.setItem("users", JSON.stringify(updatedUsers));
-    const currentUser = updatedUsers.find((user) => user.status);
+    const currentUser = updatedUsers.find((user: any) => user.status);
     setCurrentExpenses(currentUser.expenses); // update the expenses state with the new expenses
     console.log("currentExpenses:", currentExpenses);
-    console.log(loggedInUser);
   };
+
   return (
     <>
       <div className="big-container">
@@ -83,19 +89,23 @@ function BigContainer(props) {
           <Features
             className="sm-card row1"
             label="Deposit"
-            handleFeature={handleDepositSubmit}
+            handleFeature={handleDepositSubmitString}
           />
           <Features
             className="sm-card row1"
             label="Send Money"
-            handleFeature={handleWithdrawSubmit}
+            handleFeature={handleWithdrawSubmitString}
           />
           <Features
             className="sm-card"
             label="Withdraw"
-            handleFeature={handleWithdrawSubmit}
+            handleFeature={handleWithdrawSubmitString}
           />
-          <Features className="sm-card" label="Friends" />
+          <Features
+            className="sm-card"
+            label="Friends"
+            handleFeature={handleWithdrawSubmitString}
+          />
         </div>
       </div>
       <div className="big-container">
@@ -105,7 +115,6 @@ function BigContainer(props) {
           setCurrentExpenses={setCurrentExpenses}
           handleExpenseSubmit={handleExpenseSubmit}
           setBalance={setBalance}
-          balance={currentBalance}
           currentBalance={currentBalance}
         />
       </div>

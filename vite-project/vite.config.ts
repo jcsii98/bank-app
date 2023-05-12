@@ -6,7 +6,7 @@ export default defineConfig({
   base: '/bank-app/',
   build: {
     rollupOptions: {
-      input: '/vite-project/src/main.tsx'
+      input: 'src/main.tsx'
     }
   },
   server: {

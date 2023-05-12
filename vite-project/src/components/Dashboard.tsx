@@ -1,15 +1,23 @@
 import BigContainer from "./BigContainer";
-import React, { useState } from "react";
+import { useState } from "react";
 import Credentials from "./Credentials";
 
-function Dashboard(props) {
+interface DashboardProps {
+  name: string;
+  cardNumber: string;
+  balance: number;
+  expiryDate: string;
+  expenses: number[];
+}
+
+function Dashboard(props: DashboardProps) {
   const { name, cardNumber, balance, expiryDate, expenses } = props;
   const [isLoggedOut, setIsLoggedOut] = useState(false);
   const handleClick = () => {
     console.log("logout button clicked");
     setIsLoggedOut(true);
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const updatedUsers = users.map((user) => {
+    const users = JSON.parse(localStorage.getItem("users")!) || [];
+    const updatedUsers = users.map((user: any) => {
       return { ...user, status: false };
     });
     localStorage.setItem("users", JSON.stringify(updatedUsers));
