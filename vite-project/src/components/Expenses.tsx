@@ -1,6 +1,14 @@
 import { useState } from "react";
 
-function Expenses(props) {
+interface ExpensesProps {
+  currentBalance: any;
+  expenses: any;
+  setCurrentExpenses: any;
+  currentExpenses: any;
+  handleExpenseSubmit: any;
+  setBalance: any;
+}
+function Expenses(props: ExpensesProps) {
   const {
     currentBalance,
     expenses,
@@ -16,36 +24,49 @@ function Expenses(props) {
   const [editedExpenseIndex, setEditedExpenseIndex] = useState(-1);
   const [editedExpenseName, setEditedExpenseName] = useState("");
   const [editedExpenseCost, setEditedExpenseCost] = useState("");
-  const handleEditClick = (index) => {
-    setEditedExpenseIndex(index);
-  };
 
-  const handleEditStart = (index) => {
+  const handleEditStart = (index: any) => {
     const expense = currentExpenses[index];
     setEditedExpenseIndex(index);
     setEditedExpenseName(expense.name);
     setEditedExpenseCost(expense.cost);
   };
-  const handleEditSubmit = (index) => {
+  const handleEditSubmit = (index: any) => {
     const expense = currentExpenses[index];
-    console.log(expense.cost);
-    const prevInput = expense.cost;
-    console.log(editedExpenseCost);
-    const newInput = editedExpenseCost;
+    const prevInput = Number(expense.cost);
+    const newInput = Number(editedExpenseCost);
+    const currentBalanceNumber = Number(currentBalance);
 
-    console.log(currentBalance);
+    if (newInput === 0) {
+      const updatedExpenses = currentExpenses.filter(
+        (_: any, i: any) => i !== index
+      );
+      const users = JSON.parse(localStorage.getItem("users")!) || [];
+      const newBalance = currentBalanceNumber + prevInput;
+      const updatedUsers = users.map((user: any) => {
+        if (user.status) {
+          return { ...user, expenses: updatedExpenses, balance: newBalance };
+        } else {
+          return user;
+        }
+      });
+      localStorage.setItem("users", JSON.stringify(updatedUsers));
+      setCurrentExpenses(updatedExpenses);
+      setBalance(newBalance.toLocaleString());
+      setEditedExpenseIndex(-1);
+      return;
+    }
+
     const inputDiff = prevInput - newInput;
-    const newBalance = inputDiff + currentBalance;
-    console.log(newBalance);
-    setBalance(newBalance);
-    const updatedExpenses = currentExpenses.map((expense, i) => {
+    const newBalance = currentBalanceNumber + inputDiff;
+    const updatedExpenses = currentExpenses.map((expense: any, i: any) => {
       if (i === index) {
         return { name: editedExpenseName, cost: editedExpenseCost };
       }
       return expense;
     });
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const updatedUsers = users.map((user) => {
+    const users = JSON.parse(localStorage.getItem("users")!) || [];
+    const updatedUsers = users.map((user: any) => {
       if (user.status) {
         return { ...user, expenses: updatedExpenses, balance: newBalance };
       } else {
@@ -54,8 +75,10 @@ function Expenses(props) {
     });
     localStorage.setItem("users", JSON.stringify(updatedUsers));
     setCurrentExpenses(updatedExpenses);
+    setBalance(newBalance.toString());
     setEditedExpenseIndex(-1);
   };
+
   const handleEditCancel = () => {
     setEditedExpenseIndex(-1);
   };
@@ -69,20 +92,22 @@ function Expenses(props) {
     console.log("modal hidden");
   };
 
-  const handleExpenseNameChange = (event) => {
+  const handleExpenseNameChange = (event: any) => {
     setExpenseName(event.target.value);
   };
-  const handleExpenseCostChange = (event) => {
+  const handleExpenseCostChange = (event: any) => {
     setExpenseCost(event.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    console.log("handleSubmit called");
     handleExpenseSubmit(expenseName, expenseCost);
-    const inputAmount = expenseCost;
+    const inputAmount = Number(expenseCost);
     const newBalance = currentBalance - inputAmount;
     setBalance(newBalance);
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const updatedUsers = users.map((user) => {
+    const users = JSON.parse(localStorage.getItem("users")!) || [];
+    const updatedUsers = users.map((user: any) => {
       if (user.status) {
         return { ...user, balance: newBalance };
       } else {
@@ -103,7 +128,7 @@ function Expenses(props) {
         {expenses && (
           <div className="expense-list-container">
             <ul className="expense-list">
-              {currentExpenses.map((expense, index) => (
+              {currentExpenses.map((expense: any, index: any) => (
                 <li className="expense-item" key={index}>
                   {editedExpenseIndex === index ? (
                     <>
@@ -169,40 +194,35 @@ function Expenses(props) {
             <div className="modal-main">
               <div className="modal-main-content">
                 <div className="modal-main-content-header">
-                  <p>Expenses</p>
+                  <p className="modal-label">EXPENSES</p>
                   <span className="close-main" onClick={handleModalClose}>
                     &times;
                   </span>
                 </div>
-                <div className="modal-main-content-footer">
-                  <form>
-                    <label>
-                      Expense Name:
-                      <input
-                        type="text"
-                        value={expenseName}
-                        onChange={handleExpenseNameChange}
-                      />
-                    </label>
-                    <br />
-                    <label>
-                      Expense Cost:
-                      <input
-                        type="number"
-                        value={expenseCost}
-                        onChange={handleExpenseCostChange}
-                      />
-                    </label>
-                    <br />
-                    <button
-                      onClick={handleSubmit}
-                      type="button"
-                      className="btn btn-secondary expense-btn"
-                    >
-                      Add
-                    </button>
-                  </form>
-                </div>
+                <form
+                  className="modal-expense-content-footer"
+                  onSubmit={handleSubmit}
+                >
+                  <input
+                    placeholder="Expense"
+                    className="input-modal expense-input"
+                    type="text"
+                    value={expenseName}
+                    onChange={handleExpenseNameChange}
+                  />
+                  <input
+                    placeholder="0.00"
+                    className="input-modal expense-input"
+                    type="text"
+                    value={expenseCost}
+                    onChange={handleExpenseCostChange}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        handleSubmit(event);
+                      }
+                    }}
+                  />
+                </form>
               </div>
             </div>
           </>

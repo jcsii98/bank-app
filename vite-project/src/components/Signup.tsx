@@ -1,7 +1,10 @@
 import { useState } from "react";
 import Input from "./Input";
 
-function Signup(props) {
+interface SignupProps {
+  toggleCredentials: any;
+}
+function Signup(props: SignupProps) {
   const { toggleCredentials } = props;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -17,13 +20,17 @@ function Signup(props) {
   const randomNumber = generateRandomNumber();
 
   // Card number
-  const generateCardNumber = () => {
-    const prefix = "5775";
+  const generateCardNumber = (): string => {
+    const prefix = 5775;
     const length = 12;
     let randomNum = Math.floor(Math.random() * Math.pow(10, length));
-    randomNum = prefix + String(randomNum).padStart(length, "0");
-    const formattedNum = randomNum.match(/.{1,4}/g).join(" ");
-    return formattedNum;
+    randomNum = prefix * Math.pow(10, length) + randomNum;
+    const formattedNum = randomNum.toString().match(/.{1,4}/g);
+    if (formattedNum !== null) {
+      return formattedNum.join(" ");
+    } else {
+      return "";
+    }
   };
 
   const cardNumber = generateCardNumber();
@@ -41,7 +48,7 @@ function Signup(props) {
   };
   const expiryDate = generateExpiryDate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     if (!username || !password || !name) {
       setError("Please enter a username and password");
@@ -57,8 +64,8 @@ function Signup(props) {
       status: false,
       expenses: [], // add an expenses array to the user object
     };
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const existingUser = users.find((u) => u.username === username);
+    const users = JSON.parse(localStorage.getItem("users")!) || [];
+    const existingUser = users.find((u: any) => u.username === username);
     if (existingUser) {
       setError("Username already exists");
     } else {
@@ -76,14 +83,14 @@ function Signup(props) {
           <div className="card my-5">
             <div className="card-body p-5">
               <h1 className="mb-4">Signup</h1>
-              <form onSubmit={handleSubmit}>
+              <form autoComplete="off" onSubmit={handleSubmit}>
                 <div className="mb-3 main-form">
                   <Input
                     type="text"
                     name="name"
                     label="Name"
                     value={name}
-                    onChange={(event) => setName(event.target.value)}
+                    onChange={(event: any) => setName(event.target.value)}
                   />
                 </div>
                 <div className="mb-3 main-form">
@@ -92,7 +99,7 @@ function Signup(props) {
                     name="username"
                     label="Username"
                     value={username}
-                    onChange={(event) => setUsername(event.target.value)}
+                    onChange={(event: any) => setUsername(event.target.value)}
                   />
                 </div>
                 <div className="mb-3 main-form">
@@ -101,7 +108,7 @@ function Signup(props) {
                     name="password"
                     label="Password"
                     value={password}
-                    onChange={(event) => setPassword(event.target.value)}
+                    onChange={(event: any) => setPassword(event.target.value)}
                   />
                 </div>
                 {error && <div className="text-danger mb-3">{error}</div>}
@@ -112,7 +119,7 @@ function Signup(props) {
                   Already have an account?{" "}
                   <button
                     type="button"
-                    className="btn btn-link p-0"
+                    className="btn btn-link p-0 text-btn"
                     onClick={toggleCredentials}
                   >
                     Login here
