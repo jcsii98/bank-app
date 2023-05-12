@@ -320,7 +320,10 @@ body {
   background: #3e5c76;
   text-align: center;
   color: white;
+<<<<<<< HEAD
   font-family: "Roboto Mono", monospace;
+=======
+>>>>>>> 164d50480462e33bd4042b3ae351c6c9cc6e1d1c
 }
 .input-modal-button {
   margin: 0;
