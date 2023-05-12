@@ -9,11 +9,5 @@ export default defineConfig({
       input: 'src/main.tsx'
     }
   },
-  server: {
-    fs: {
-      // add the parent directory of your project here
-      allow: ['../']
-    }
-  },
   plugins: [react()]
 });
