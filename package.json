@@ -3,9 +3,15 @@
     "bootstrap": "^5.2.3",
     "react-bootstrap": "^2.7.4"
   },
+  "homepage": "https://jcsii98.github.io/bank-app",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
   }
 }
