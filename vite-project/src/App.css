@@ -3,6 +3,7 @@ body {
   height: 100vh;
   display: flex;
   user-select: none;
+  box-sizing: border-box;
 }
 .gradient-background {
   background: linear-gradient(to bottom, #3e5c76, #1d2d44);
@@ -14,14 +15,19 @@ body {
   display: flex;
   place-items: center;
 }
-
-.mt-3 {
-  display: flex;
-  text-align: center;
-  align-items: center;
-  justify-content: ;
+.card {
+  background-color: hsl(47, 44%, 89%) !important;
 }
-
+.mt-3 {
+  align-items: center;
+  display: flex;
+}
+.p-5 {
+  color: #3e5c76 !important;
+}
+.text-btn {
+  margin-left: 10px;
+}
 .big-container {
   width: 620px;
   display: flex;
@@ -37,18 +43,19 @@ body {
   grid-template-columns: 1fr 1fr;
 }
 .sm-card {
-  background-color: #748cab;
+  border: none;
+  background-color: hsl(47, 44%, 89%);
   height: auto;
   width: 150px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   margin-left: 5px;
   margin-right: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 400;
-  color: hsl(47, 44%, 89%);
+  font-weight: 600;
+  color: #415a77;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .row1 {
@@ -81,9 +88,9 @@ body {
 
 /* virtual card */
 .virtual-card-container {
-  background-color: hsl(47, 44%, 89%);
+  background-color: #415a77;
   font-family: "Roboto Mono", monospace;
-  color: #343a40;
+  color: hsl(47, 44%, 89%);
   height: 180px;
   width: 300px;
   border-radius: 10px;
@@ -124,7 +131,7 @@ body {
 
 /* expenses */
 .expenses-container {
-  background-color: #748cab;
+  background-color: hsl(47, 44%, 89%);
   max-height: 500px;
   width: 100%;
   margin: 5px;
@@ -134,6 +141,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  color: #415a77;
 }
 .expense-list-container {
   max-height: 100px;
@@ -189,7 +197,7 @@ body {
   width: 100%;
   font-weight: 600;
   font-size: 24.8px;
-  color: hsl(47, 44%, 89%);
+  color: #415a77;
 }
 .expense-cost {
   text-align: end;
@@ -201,14 +209,14 @@ body {
 }
 .secondary-button {
   font-weight: 400;
-  color: hsl(47, 44%, 89%);
+  color: #415a77;
   background: none;
   border: none;
   width: auto;
   padding: 0;
 }
 .secondary-button:hover {
-  color: hsl(46, 23%, 82%);
+  color: ;
 }
 .expense-button-container {
   display: flex;
@@ -234,6 +242,20 @@ body {
   outline: none;
   background-color: transparent;
 }
+.expense-input {
+  text-align: left !important;
+  padding-left: 0.3em;
+  position: relative;
+}
+.expense-input::before {
+  content: "₱";
+  position: absolute;
+  left: 0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+  color: black;
+}
+
 /* modal */
 .modal-main {
   position: fixed;
@@ -248,24 +270,61 @@ body {
   align-items: center;
 }
 .modal-main-content {
-  background-color: white;
+  width: 200px;
+  background-color: hsl(47, 44%, 89%);
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 .modal-main-content-header {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+}
+.modal-main-content-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+}
+.modal-expense-content-footer {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+  color: white;
+}
+.input-modal::placeholder {
+  color: hsla(47, 43%, 89%, 0.7);
+}
+.input-modal:focus::placeholder {
+  color: transparent;
+}
+
+.modal-label {
+  text-align: center;
+  grid-column-start: 2;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  color: #3e5c76;
 }
 .close-main {
+  justify-self: end;
   cursor: pointer;
   color: black;
 }
 .input-modal {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 50%;
+  grid-column-start: 2;
   border: none;
-  background: none;
+  border-radius: 5px;
+  background: #3e5c76;
+  text-align: center;
+  color: white;
+  font-family: "Roboto Mono", monospace;
 }
 .input-modal-button {
+  margin: 0;
+  padding: 0;
   border: none;
   background: none;
 }
@@ -282,5 +341,38 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .main-form-input {
   border: none;
-  border-bottom: 1.5px solid black;
+  border-bottom: 1.5px solid #3e5c76;
+  background-color: none;
+  background: none;
+}
+.btn-link {
+  --bs-btn-font-weight: 400;
+  --bs-btn-color: #1d2d44 !important;
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: #3e5c76 !important;
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: var(--bs-link-hover-color);
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-disabled-color: #6c757d;
+  --bs-btn-disabled-border-color: transparent;
+  --bs-btn-box-shadow: none;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  text-decoration: underline;
+}
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #1d2d44 !important;
+  --bs-btn-border-color: #1d2d44 !important;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #3e5c76 !important;
+  --bs-btn-hover-border-color: #3e5c76 !important;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #3e5c76 !important;
+  --bs-btn-active-border-color: #3e5c76 !important;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #3e5c76 !important;
+  --bs-btn-disabled-border-color: #3e5c76 !important;
 }

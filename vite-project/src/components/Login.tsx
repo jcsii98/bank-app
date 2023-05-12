@@ -49,7 +49,7 @@ function Login(props) {
               <div className="card my-5">
                 <div className="card-body p-5">
                   <h1 className="mb-4">Login</h1>
-                  <form onSubmit={submitForm}>
+                  <form autoComplete="off" onSubmit={submitForm}>
                     <div className="mb-3 main-form">
                       <Input
                         type="text"
@@ -75,7 +75,7 @@ function Login(props) {
                     <div className="mt-3">
                       Don't have an account?{" "}
                       <button
-                        className="btn btn-link p-0"
+                        className="btn btn-link p-0 text-btn"
                         type="button"
                         onClick={toggleCredentials}
                       >

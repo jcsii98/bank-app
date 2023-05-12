@@ -76,7 +76,7 @@ function Signup(props) {
           <div className="card my-5">
             <div className="card-body p-5">
               <h1 className="mb-4">Signup</h1>
-              <form onSubmit={handleSubmit}>
+              <form autoComplete="off" onSubmit={handleSubmit}>
                 <div className="mb-3 main-form">
                   <Input
                     type="text"
@@ -112,7 +112,7 @@ function Signup(props) {
                   Already have an account?{" "}
                   <button
                     type="button"
-                    className="btn btn-link p-0"
+                    className="btn btn-link p-0 text-btn"
                     onClick={toggleCredentials}
                   >
                     Login here

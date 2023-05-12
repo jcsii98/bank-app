@@ -30,7 +30,7 @@ function BigContainer(props) {
   };
   const handleWithdrawSubmit = (withdrawAmount) => {
     if (withdrawAmount > currentBalance) {
-      console.log("Withdrawal amount cannot be greater than balance");
+      console.log("Amount cannot be greater than balance");
       return;
     }
 

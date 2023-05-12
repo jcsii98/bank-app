@@ -1,7 +1,19 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+// vite.config.js
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
-})
+  base: '/bank-app/',
+  build: {
+    rollupOptions: {
+      input: '/vite-project/src/main.tsx'
+    }
+  },
+  server: {
+    fs: {
+      // add the parent directory of your project here
+      allow: ['../']
+    }
+  },
+  plugins: [react()]
+});
