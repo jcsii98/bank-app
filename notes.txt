@@ -6,3 +6,8 @@ modals
 expense list looks ugly
 add icons to features
 logout button looks fugly
+
+
+getting this error : " ",
+
+from this code snippet : " ".
